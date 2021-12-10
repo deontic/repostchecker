@@ -1,0 +1,11 @@
+.repost_url_container {
+    border: 1px solid black;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+.repost_url_container:link{
+    color: #0000FF;
+}
+.repost_url_container:hover{
+    color: rgb(60, 60, 255); 
+  } 

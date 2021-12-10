@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+  "name": "Repostchecker",
+  "version": "0.1.0",
+  "description": "check for Reddit reposts",
+
+
+
+  
+    "permissions":[
+      "activeTab"
+    ]
+
+,
+  "browser_action": {
+    "default_title": "Repostchecker"
+
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://www.reddit.com/r/*", "https://www.reddit.com/r/*"],
+      "run_at": "document_idle",
+      "js": [ "jquery-3.6.0.min.js", "jquery-ui.min.js", "contentScript.js"],
+      "css": ["jquery-ui.min.css", "dialog.css"]
+    } 
+  ]
+}
