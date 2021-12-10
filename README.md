@@ -3,7 +3,7 @@ an extension for Google Chrome to check whether a Reddit post is a repost with e
 
 ######  \* only works if you are a moderator of the subreddit \** not tested on mobile
 ## installation
-* download build folder
+* download [build.zip](/build) and extract the build folder
 * visit chrome://extensions/ via the addressbar
 
        <img width="335" alt="image" src="https://user-images.githubusercontent.com/68165727/145637973-0709fe69-fc9e-461c-b2ec-4a008fed0596.png">
@@ -15,7 +15,7 @@ an extension for Google Chrome to check whether a Reddit post is a repost with e
 * select "Load unpacked"
 
         <img width="315" alt="image" src="https://user-images.githubusercontent.com/68165727/145638581-0c395211-feca-4c9b-8bc1-ebeef6ca29eb.png">
-* select the build folder you just downloaded
+* select the build folder you extracted in step 1
 * plugin should be installed
 
  
