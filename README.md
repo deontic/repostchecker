@@ -1,7 +1,7 @@
 # repostchecker
-an extension for Google Chrome to check whether a Reddit post is a repost with ease, uses the undocumented repostsleuth API * **
+an extension for Google Chrome to check whether a Reddit post is a repost with ease, uses the undocumented repostsleuth API * ** ***
 
-######  \* only works if you are a moderator of the subreddit \** not tested on mobile
+######  \* only works if you are a moderator of the subreddit \** not tested on mobile \*** doesn't work for a few urls, this is a repostsleuth limitation
 ## installation
 * download [build.zip](/build) and extract the build folder
 * visit chrome://extensions/ via the addressbar
