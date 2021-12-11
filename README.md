@@ -2,6 +2,12 @@
 an extension for Google Chrome to check whether a Reddit post is a repost with ease, uses the undocumented repostsleuth API * ** ***
 
 ######  \* only works if you are a moderator of the subreddit \** not tested on mobile \*** doesn't work for certain urls, this is a repostsleuth limitation
+
+<img width="419" alt="image" src="https://user-images.githubusercontent.com/68165727/145656345-70135050-1905-4d88-bf4e-b9024718e509.png">
+
+#### note: 
+can very rarely give you a net::ERR_INCOMPLETE_CHUNKED_ENCODING 200 (OK) error but it generally works ok, remember repostsleuth can't always detect reposts due to changes on the image 
+
 ## installation
 * download [build.zip](/build) and extract the build folder
 * visit chrome://extensions/ via the addressbar
