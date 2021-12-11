@@ -16,7 +16,7 @@ by default repostchecker uses these parameters:
 these can be changed in the contentScript.js file
 
 ## installation
-* download [build.zip](/build) and extract the build folder<img width="217" alt="145656649-d8136791-5cdc-47dc-a265-56838f296349" src="https://user-images.githubusercontent.com/68165727/145656685-eaca69c3-42d1-445a-8770-7cedbb22ae79.png">
+* download [build_archive.zip](/build_archive) and extract the **build** folder present inside the archive
 
 * visit chrome://extensions/ via the addressbar
 
