@@ -30,7 +30,7 @@ additionally, remember repostsleuth can't always detect reposts  (e.g when certa
 ## building
 if you want to make changes and build: navigate to the repostchecker directory, install dependencies, and build.
  
-```
+``` 
 cd repostchecker
 npm install
 npm run watch
