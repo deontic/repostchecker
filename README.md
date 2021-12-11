@@ -35,11 +35,11 @@ these can be changed in the contentScript.js file
  
 
 ## building
-if you want to make changes and build: navigate to the repostchecker directory, install dependencies, and build.
+if you want to make changes and build: navigate to the repostchecker-main directory, install dependencies, and build.
  
 ``` 
 cd repostchecker
 npm install
 npm run watch
 ```
-load/refresh the extension
+load/refresh the extension after making changes
