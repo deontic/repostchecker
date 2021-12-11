@@ -9,6 +9,8 @@ a minimal extension for Google Chrome to check whether a Reddit post is a repost
 can very rarely give you a net::ERR_INCOMPLETE_CHUNKED_ENCODING error but it generally works ok, 
 additionally, remember repostsleuth can't always detect reposts  (e.g when certain changes have been made to the image) 
 
+searching for the image on Google via uploading or searching for a transcription of the image usually yields results too
+
 by default repostchecker uses these parameters:
 
 <img width="330" alt="image" src="https://user-images.githubusercontent.com/68165727/145656649-d8136791-5cdc-47dc-a265-56838f296349.png">
