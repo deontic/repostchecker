@@ -1,7 +1,12 @@
 /* eslint-disable no-undef, camelcase */
 'use strict';
 
-const elementReady = require('./element-ready');
+// const elementReady = require('./element-ready');
+
+/**
+ * @member {string||null} href - main post img href
+ */
+let href = null;
 
 /**
  * @function main
@@ -22,27 +27,41 @@ async function main() {
     // initialize repostchecker UI components');
     // }
     // console.log('runs 2')
-    
-    
+
     // await elementReady('._3m20hIKOhTTeMgPnfMbVNN')
 
-    
-    await new Promise((resolve, reject) => {
+    await new Promise(async (resolve, reject) => {
       // the condition in the other interval can be satisfied just when the
       // user changes the page
       if (!location.href.includes('/comments')) {
-        reject(new Error('rejecting; page does not contain a post'));
+        // wait for a bit because sometimes
+        // when switching between different panels
+        // '/comments' isn't in the url for generally a fraction of
+        // a second
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, 2000);
+        });
+        if (!location.href.includes('/comments')) {
+          reject(new Error('rejecting; page does not contain a post'));
+        }
       }
       existsInterval = setInterval(() => {
         div =
           document.getElementById(`t3_${id}-overlay-mod-actions-menu`) ||
-          document.getElementById(`t3_${id}-mod-actions-menu`);
+          document.getElementById(`t3_${id}-mod-actions-menu`) ||
+          document.querySelector('.OccjSdFd6HkHhShRg6DOl');
+
+        // div = document.getElementsByClassName('_3-miAEojrCvx_4FQ8x3P-s')
+        // [0].childNodes[6]
+
         // console.log('div: ', div);
 
         if (div) {
           resolve();
         }
-      }, 80);
+      }, 30);
     }).catch((e) => {
       console.log(e);
       failed = true;
@@ -57,16 +76,33 @@ async function main() {
       return;
     }
 
-    let a;
     // wait for element with class _3m20hIKOhTTeMgPnfMbVNN to exist
-    await new Promise((resolve, reject) => {
+    href = await new Promise((resolve, reject) => {
       existsInterval = setInterval(() => {
-        a = document.querySelector('._3m20hIKOhTTeMgPnfMbVNN');
+        // if either the post viewer exists OR
+        // it does exist, but is not expanded
+
         // console.log('div: ', div);
+
+        const a = document.querySelector('._3m20hIKOhTTeMgPnfMbVNN');
+        const expandContainer = document.getElementsByClassName(
+          'saNpcHve-34zjaa0cbIxW icon icon-expand'
+        );
+
         if (a) {
-          resolve();
+          resolve(encodeURIComponent(a.href));
         }
-      }, 100);
+
+        // if the image container has not been expanded, make it expanded
+        else if (expandContainer.length !== 0) {
+          expandContainer[0].click();
+          resolve(
+            encodeURIComponent(
+              document.querySelector('._3m20hIKOhTTeMgPnfMbVNN').href
+            )
+          );
+        }
+      }, 50);
     });
 
     clearInterval(existsInterval);
@@ -74,9 +110,12 @@ async function main() {
     // div = document.getElementById(`t3_${id}-overlay-mod-actions-menu`) ||
     // document.getElementById(`t3_${id}-mod-actions-menu`);
 
+    console.log('inserting repostchecker button');
     const button = document.createElement('button');
 
+    button.id = 'repostchecker-button';
     button.textContent = 'RC';
+    // button.classList.add('_1rNBkuuOkN2SorEXyRkYjB'); // ///
     button.style['font-size'] = '20px';
     button.style['white-space'] = 'nowrap';
     button.style['padding-right'] = '4px';
@@ -87,11 +126,14 @@ async function main() {
 
     const dialog = document.createElement('div');
     dialog.id = '_reposts_dialog';
+    dialog.style['border-radius'] = '5px';
     dialog.style['position'] = 'relative !important';
     dialog.style['padding-bottom'] = '5px';
     dialog.style['word-break'] = 'break-all';
 
     document.body.appendChild(dialog);
+
+    console.log('successfully inserted repostchecker button');
 
     $('#_reposts_dialog').dialog({
       autoOpen: false,
@@ -120,12 +162,14 @@ async function main() {
    */
   async function detectRepost() {
     // const url = `https://api.repostsleuth.com/image?filter=true&url=${window.location.href}&same_sub=true&filter_author=true&only_older=false&include_crossposts=false&meme_filter=false&target_match_percent=${matchPercent}&filter_dead_matches=false&target_days_old=0`;
-    const href = encodeURIComponent(
-      document.querySelector('._3m20hIKOhTTeMgPnfMbVNN').href
-    );
+    //
+    // const href = encodeURIComponent(
+    //   document.querySelector('._3m20hIKOhTTeMgPnfMbVNN').href
+    // );
 
     // get json from https://www.reddit.com/{post id}/.json
-    // todo just get the image url via json ['data']['children'][0]['data']['url']
+    // todo just get the image url via
+    // json ['data']['children'][0]['data']['url']
     // no need to wait for the img div to load etc.
     // this is a much better method^, use it
 
@@ -137,6 +181,29 @@ async function main() {
     // an image
     // this edge case needs to be handled by only using the image url from
     // the post
+
+    const dialog = document.getElementById('_reposts_dialog'); //
+    // clear children
+
+    while (dialog.firstChild) {
+      dialog.removeChild(dialog.firstChild);
+    } //
+
+    const loading = document.createElement('div');
+    loading.textContent = 'loading';
+    const goal = 'loading...';
+    let goalFinalIndex = 7;
+    const animationInterval = setInterval(() => {
+      goalFinalIndex = (goalFinalIndex < 10 && +goalFinalIndex + +1) || 7;
+      loading.textContent = goal.substring(0, goalFinalIndex);
+    }, 250);
+
+    loading.style['font-size'] = '20px';
+    loading.style['position'] = 'relative';
+    loading.style['top'] = '5px';
+
+    dialog.appendChild(loading);
+    $('#_reposts_dialog').dialog('open');
 
     let result;
     try {
@@ -156,12 +223,26 @@ async function main() {
     const { closest_match } = json;
     let { matches } = json;
 
-    const dialog = document.getElementById('_reposts_dialog');
-    // clear children
+    // const dialog = document.getElementById('_reposts_dialog');     //
+    // // clear children
 
-    while (dialog.firstChild) {
-      dialog.removeChild(dialog.firstChild);
-    }
+    // while (dialog.firstChild) {
+    //   dialog.removeChild(dialog.firstChild);
+    // }                                                             //
+
+    // create some text 'loading...' with
+    // animated ellipsis, append to top of dialog
+
+    // const loading = document.createElement('div');
+    // loading.textContent = 'loading...';
+    // loading.style['animation'] = 'ellipsis 1s steps(4) infinite';
+    // loading.style['font-size'] = '20px';
+    // loading.style['position'] = 'relative'
+    // loading.style['top'] = '-20px';
+
+    // dialog.appendChild(loading);
+
+    // $('#_reposts_dialog').dialog('open');
 
     // closest_match should exist, and should not be present within matches
 
@@ -178,7 +259,7 @@ async function main() {
 
     matches.sort((a, b) => b.match_percent - a.match_percent);
 
-    $('#_reposts_dialog').dialog('open');
+    // $('#_reposts_dialog').dialog('open');            //
 
     const links = [];
     // regardless of the query parameter being specified in the url,
@@ -218,14 +299,17 @@ async function main() {
     // todo remove above comment
     // prettier-ignore
     // eslint-disable-next-line
-    const title = `${(none && 'No') || repostCount} reposts found` + (none&& '' ||
-    `, > ${matchPercent}% match, sorted in descending order of similarity`);
+    const title = `${(none && 'No') || repostCount} reposts found` + (none && '' ||
+      `, > ${matchPercent}% match, sorted in descending order of similarity`);
     dialog.textContent = title;
 
     // separator
     const separator = document.createElement('div');
     separator.style.height = '15px';
     dialog.appendChild(separator);
+
+    clearInterval(animationInterval);
+
     // couldn't append children from within the loop,
     // adding children separately like this works
 
@@ -258,6 +342,6 @@ window.onload = function () {
       url = location.href;
       await main();
     }
-  }, 125);
+  }, 30);
   // changed from 150 -> 125
 };
