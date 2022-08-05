@@ -1,6 +1,8 @@
 /* eslint-disable no-undef, camelcase */
 'use strict';
 
+const elementReady = require('./element-ready');
+
 /**
  * @function main
  * @void
@@ -15,6 +17,16 @@ async function main() {
     let failed;
     let existsInterval;
 
+    // if (!location.href.includes('/comments')) {
+    //   return console.log('ERROR: page does not contain comments, cannot
+    // initialize repostchecker UI components');
+    // }
+    // console.log('runs 2')
+    
+    
+    // await elementReady('._3m20hIKOhTTeMgPnfMbVNN')
+
+    
     await new Promise((resolve, reject) => {
       // the condition in the other interval can be satisfied just when the
       // user changes the page
@@ -30,7 +42,7 @@ async function main() {
         if (div) {
           resolve();
         }
-      }, 100);
+      }, 80);
     }).catch((e) => {
       console.log(e);
       failed = true;
@@ -41,7 +53,7 @@ async function main() {
     // console.log('cleared interval');
     if (failed) {
       console.log('failed');
-      console.log('will return now');
+      // console.log('will return now');
       return;
     }
 
@@ -111,6 +123,12 @@ async function main() {
     const href = encodeURIComponent(
       document.querySelector('._3m20hIKOhTTeMgPnfMbVNN').href
     );
+
+    // get json from https://www.reddit.com/{post id}/.json
+    // todo just get the image url via json ['data']['children'][0]['data']['url']
+    // no need to wait for the img div to load etc.
+    // this is a much better method^, use it
+
     const locationHref = location.href;
     const url = `https://api.repostsleuth.com/image?filter=true&url=${href}&same_sub=true&filter_author=true&only_older=false&include_crossposts=false&meme_filter=false&target_match_percent=${matchPercent}&filter_dead_matches=false&target_days_old=0`;
     // works
@@ -184,7 +202,7 @@ async function main() {
       //   link !== closestMatchUrl
       // );
       if (
-        hamming_match_percent > matchPercent &&
+        hamming_match_percent >= matchPercent &&
         link !== locationHref &&
         link !== closestMatchUrl
       ) {
@@ -240,5 +258,6 @@ window.onload = function () {
       url = location.href;
       await main();
     }
-  }, 150);
+  }, 125);
+  // changed from 150 -> 125
 };
