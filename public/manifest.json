@@ -13,7 +13,7 @@
     {
       "matches": ["http://www.reddit.com/r/*", "https://www.reddit.com/r/*"],
       "run_at": "document_idle",
-      "js": ["jquery-3.6.0.min.js", "jquery-ui.min.js", "contentScript.js"],
+      "js": ["contentScript.js"],
       "css": ["jquery-ui.min.css", "dialog.css"]
     }
   ]
