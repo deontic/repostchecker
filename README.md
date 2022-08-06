@@ -14,7 +14,7 @@ searching for the image on Google via uploading or searching for a transcription
 
 by default repostchecker uses these parameters:
 
-<img width="330" alt="image" src="https://user-images.githubusercontent.com/68165727/145656649-d8136791-5cdc-47dc-a265-56838f296349.png">
+<img width="450" alt="image" src="https://user-images.githubusercontent.com/68165727/145656649-d8136791-5cdc-47dc-a265-56838f296349.png">
 
 these can be changed in the contentScript.js file
 
