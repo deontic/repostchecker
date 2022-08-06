@@ -1,4 +1,4 @@
-.repost_url_container {
+.repost-url-container {
   border: 1px solid black;
   overflow-x: scroll;
   white-space: nowrap;
@@ -6,6 +6,28 @@
 /* .repost_url_container:link {
   color: #0000ff;
 } */
-.repost_url_container:hover {
+.repost-url-container:hover {
   color: rgb(60, 60, 255);
+}
+
+.reposts-dialog{
+  position: relative !important;
+  padding-bottom: 5px;
+  word-break: break-all;
+}
+
+@query (prefers-color-scheme: dark) {
+  .ui-dialog .ui-dialog-buttonpane .reposts-dialog .{
+    background-color: #000000 !important;
+    color: #ffffff I !important;
+  }
+  .repost-url-container {
+    color: #00fffb !important;
+  }
+  .repost-url-container:hover {
+    color: #bdc5ff !important;
+  }
+  
+
+
 }

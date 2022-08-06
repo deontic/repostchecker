@@ -2,19 +2,61 @@
 'use strict';
 
 // const elementReady = require('./element-ready');
+// get good contrast for future theme: https://webaim.org/resources/contrastchecker/
 
 /**
  * @member {string||null} href - main post img href
  */
 let href = null;
+/**
+ * @member {string||undefined} matchPercent - the % similarity to match
+ */
+let matchPercent = localStorage.getItem('matchPercent') || 70;
+
+/**
+ * @function initializeDialog
+ * @param {string} title - dialog title
+ * @param {string} id - dialog id
+ * @param {boolean} temporary - whether to destroy dialog on close
+ * @return {Promise<object>}
+ */
+async function initializeDialog(title, id, temporary) {
+  const dialog = document.createElement('div');
+  dialog.classList.add('reposts-dialog');
+  dialog.id = id;
+
+  document.body.appendChild(dialog);
+
+  $(`#${id}`).dialog({
+    autoOpen: false,
+    modal: true,
+    maxHeight: 250,
+    title: title,
+    buttons: {
+      'alter match %': function () {
+        matchPercent = Number(prompt('Enter new match percent', matchPercent));
+
+        matchPercent = isNaN(matchPercent) ? 70 : matchPercent;
+        localStorage.setItem('matchPercent', matchPercent);
+      },
+      Close: function () {
+        $(this).dialog('close');
+        if (temporary) {
+          // const instance = $(this).dialog('instance');
+          const dialog = document.querySelector(`.${id}`);
+          dialog.parentNode.remove(dialog);
+        }
+      },
+    },
+  });
+  return dialog;
+}
 
 /**
  * @function main
  * @void
  */
 async function main() {
-  let matchPercent = localStorage.getItem('matchPercent') || 70;
-
   {
     const id = location.href.split('/')[6];
 
@@ -41,7 +83,7 @@ async function main() {
         await new Promise((resolve) => {
           setTimeout(() => {
             resolve();
-          }, 2000);
+          }, 1000);
         });
         if (!location.href.includes('/comments')) {
           reject(new Error('rejecting; page does not contain a post'));
@@ -101,11 +143,22 @@ async function main() {
               document.querySelector('._3m20hIKOhTTeMgPnfMbVNN').href
             )
           );
+        } else if (
+          // check if video tag exists with class media-element
+          document.querySelector('.media-element').tagName === 'VIDEO'
+        ) {
+          // videos aren't supported
+          resolve(null);
         }
       }, 50);
     });
 
     clearInterval(existsInterval);
+
+    if (!href) {
+      console.warn('ERROR: repostsleuth does not support videos');
+      return;
+    }
 
     // div = document.getElementById(`t3_${id}-overlay-mod-actions-menu`) ||
     // document.getElementById(`t3_${id}-mod-actions-menu`);
@@ -124,35 +177,15 @@ async function main() {
 
     div.appendChild(button);
 
-    const dialog = document.createElement('div');
-    dialog.id = '_reposts_dialog';
-    dialog.style['border-radius'] = '5px';
-    dialog.style['position'] = 'relative !important';
-    dialog.style['padding-bottom'] = '5px';
-    dialog.style['word-break'] = 'break-all';
-
-    document.body.appendChild(dialog);
-
     console.log('successfully inserted repostchecker button');
 
-    $('#_reposts_dialog').dialog({
-      autoOpen: false,
-      modal: true,
-      title: 'Possible reposts',
-      buttons: {
-        'alter match %': function () {
-          matchPercent = Number(
-            prompt('Enter new match percent', matchPercent)
-          );
+    const dialog = await initializeDialog(
+      'Possible reposts',
+      'reposts-dialog',
+      false
+    );
 
-          matchPercent = isNaN(matchPercent) ? 70 : matchPercent;
-          localStorage.setItem('matchPercent', matchPercent);
-        },
-        Close: function () {
-          $(this).dialog('close');
-        },
-      },
-    });
+    dialog.parentNode.style['border-radius'] = '10px';
   }
 
   /**
@@ -182,7 +215,7 @@ async function main() {
     // this edge case needs to be handled by only using the image url from
     // the post
 
-    const dialog = document.getElementById('_reposts_dialog'); //
+    const dialog = document.getElementById('reposts-dialog'); //
     // clear children
 
     while (dialog.firstChild) {
@@ -203,15 +236,20 @@ async function main() {
     loading.style['top'] = '5px';
 
     dialog.appendChild(loading);
-    $('#_reposts_dialog').dialog('open');
+    $('#reposts-dialog').dialog('open');
 
     let result;
     try {
       result = await fetch('https://corsproxytest123.herokuapp.com/' + url);
     } catch (e) {
-      console.log('ERR while fetching', e);
-      $('#_reposts_dialog').dialog('open');
-      dialog.textContent = 'ERR while fetching; check console';
+      console.warn('Error while fetching', e);
+      const dialog = await initializeDialog(
+        'ERROR: error while fetching',
+        'err-fetch',
+        true
+      );
+      dialog.textContent = e;
+      $(dialog).dialog('open');
 
       return;
       // todo use fallback karmadecay
@@ -223,7 +261,7 @@ async function main() {
     const { closest_match } = json;
     let { matches } = json;
 
-    // const dialog = document.getElementById('_reposts_dialog');     //
+    // const dialog = document.getElementById('reposts-dialog');     //
     // // clear children
 
     // while (dialog.firstChild) {
@@ -242,7 +280,7 @@ async function main() {
 
     // dialog.appendChild(loading);
 
-    // $('#_reposts_dialog').dialog('open');
+    // $('#reposts-dialog').dialog('open');
 
     // closest_match should exist, and should not be present within matches
 
@@ -254,12 +292,12 @@ async function main() {
 
     let repostCount = 0;
 
-    // $('#_reposts_dialog').dialog('open');
+    // $('#reposts-dialog').dialog('open');
     // console.log('matches:', matches);
 
     matches.sort((a, b) => b.match_percent - a.match_percent);
 
-    // $('#_reposts_dialog').dialog('open');            //
+    // $('#reposts-dialog').dialog('open');            //
 
     const links = [];
     // regardless of the query parameter being specified in the url,
@@ -316,7 +354,7 @@ async function main() {
     for (const link of links) {
       const a = document.createElement('a');
 
-      a.classList.add('repost_url_container');
+      a.classList.add('repost-url-container');
       a.target = '_blank';
       a.textContent = link;
       a.href = link;

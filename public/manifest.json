@@ -1,13 +1,13 @@
 {
-  "manifest_version": 2,
-  "name": "Repostchecker",
+  "manifest_version": 3,
+  "name": "Repost Checker",
   "version": "0.1.0",
-  "description": "check for Reddit reposts",
+  "description": "easily check for reddit reposts",
 
   "permissions": ["activeTab"],
 
-  "browser_action": {
-    "default_title": "Repostchecker"
+  "action": {
+    "default_title": "Repost Checker"
   },
   "content_scripts": [
     {
