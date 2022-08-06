@@ -17,6 +17,10 @@ let matchPercent = localStorage.getItem('matchPercent') || 70;
  * @member {string||null} id - current post id
  */
 let id = null;
+/**
+ * @member {object||null} button - current repost checking button
+ */
+let button = null;
 
 /**
  * @function initializeDialog
@@ -208,7 +212,7 @@ async function main() {
     // document.getElementById(`t3_${id}-mod-actions-menu`);
 
     console.log('inserting repostchecker button');
-    const button = document.createElement('button');
+    button = document.createElement('button');
 
     button.id = 'repostchecker-button';
     button.textContent = 'RC';
@@ -444,9 +448,16 @@ async function main() {
 // within the same window
 // npm run watch before
 let url;
+let hijackedId = '';
 window.onload = function () {
   setInterval(async () => {
-    if (document.getElementById(`t3_${id}-overlay-overflow-menu`)) {
+    if (
+      hijackedId !== id &&
+      button &&
+      href.includes('/comments') &&
+      document.getElementById(`t3_${id}-overlay-overflow-menu`)
+    ) {
+      hijackedId = id;
       const container = document.querySelectorAll('._3MmwvEEt6fv5kQPFCVJizH');
       // get last instance of this class
       const div = container.item(container.length - 1);
