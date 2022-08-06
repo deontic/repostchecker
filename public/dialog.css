@@ -1,5 +1,6 @@
 .repost-url-container {
-  border: 1px solid black;
+  border-bottom: groove;
+  line-height:20px;
   overflow-x: scroll;
   white-space: nowrap;
 }
