@@ -14,6 +14,11 @@ let href = null;
 let matchPercent = localStorage.getItem('matchPercent') || 70;
 
 /**
+ * @member {string||null} id - current post id
+ */
+let id = null;
+
+/**
  * @function initializeDialog
  * @param {string} title - dialog title
  * @param {string} id - dialog id
@@ -58,7 +63,7 @@ async function initializeDialog(title, id, temporary) {
  */
 async function main() {
   {
-    const id = location.href.split('/')[6];
+    id = location.href.split('/')[6];
 
     let div;
     let failed;
@@ -94,8 +99,8 @@ async function main() {
         div =
           document.getElementById(`t3_${id}-overlay-mod-actions-menu`) ||
           document.getElementById(`t3_${id}-mod-actions-menu`) ||
-          document.getElementById(`t3_${id}-overflow-menu`) ||
-          document.getElementById(`t3_${id}-overlay-overflow-menu`);
+          document.getElementById(`t3_${id}-overlay-overflow-menu`) ||
+          document.getElementById(`t3_${id}-overflow-menu`);
         // worth noting there's a regular
         // menu
         // when you refresh the page after being on a post, and
@@ -111,6 +116,30 @@ async function main() {
         // console.log('div: ', div);
 
         if (div) {
+          // if (div.id === `t3_${id}-overflow-menu`) {
+          //   // in case overflow-menu is stealing
+          //   // from overlay-overflow-menu again
+          //   setTimeout(() => {
+          //     const e = document.getElementById(
+          //       `t3_${id}-overlay-overflow-menu`
+          //     );
+          //     if (e) {
+          //       div = e;
+          //       resolve();
+          //     }
+          //     const overlayOverflowFinder = setInterval(() => {
+          //       const e = document.getElementById(
+          //         `t3_${id}-overlay-overflow-menu`
+          //       );
+          //       if (e) {
+          //         div = e;
+          //         clearInterval(overlayOverflowFinder);
+          //       }
+          //     }, 10);
+
+          //     resolve();
+          //   }, 4000);
+          // }
           resolve();
         }
       }, 30);
@@ -210,7 +239,8 @@ async function main() {
 
         const container = document.querySelectorAll('._3MmwvEEt6fv5kQPFCVJizH');
         // get last instance of this class
-        div = container.item(container.length - 1);
+        const div = container.item(container.length - 1);
+        console.log('div = ', div);
         div.parentNode.insertBefore(button, div.nextSibling);
       } else {
         div.parentNode.parentNode.parentNode.insertBefore(
@@ -416,6 +446,13 @@ async function main() {
 let url;
 window.onload = function () {
   setInterval(async () => {
+    if (document.getElementById(`t3_${id}-overlay-overflow-menu`)) {
+      const container = document.querySelectorAll('._3MmwvEEt6fv5kQPFCVJizH');
+      // get last instance of this class
+      const div = container.item(container.length - 1);
+      console.log('div = ', div);
+      div.parentNode.insertBefore(button, div.nextSibling);
+    }
     if (!url || location.href !== url) {
       console.log('reloading now');
 
