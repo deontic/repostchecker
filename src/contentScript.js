@@ -43,7 +43,7 @@ async function initializeDialog(title, id, temporary) {
   $(`#${id}`).dialog({
     autoOpen: false,
     modal: true,
-    maxHeight: 250,
+    minHeight: 250,
     title: title,
     buttons: {
       'alter match %': function () {
