@@ -4,7 +4,7 @@ a minimal extension for Google Chrome to check whether any Reddit (image) post i
 ###### \* doesn't work for a very tiny number of exceptional urls, this is a repostsleuth limitation
 
 <img width="419" alt="image" src="https://user-images.githubusercontent.com/68165727/145656345-70135050-1905-4d88-bf4e-b9024718e509.png">
-
+^ the image is outdated and it really looks way better now
 #### note: 
 can very rarely give you a net::ERR_INCOMPLETE_CHUNKED_ENCODING error but it generally works ok, 
 additionally, remember repostsleuth can't always detect reposts  (e.g when certain changes have been made to the image) 
