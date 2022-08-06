@@ -1,7 +1,7 @@
 # repostchecker
-a minimal extension for Google Chrome to check whether any Reddit (image) post is a repost with ease, uses the undocumented repostsleuth API * 
+a minimal extension for Google Chrome to check whether any Reddit (image) post is a repost with ease, uses the undocumented repostsleuth API 
 
-###### \* doesn't work for a very tiny number of exceptional urls, this is a repostsleuth limitation
+
 
 <img width="555" alt="image" src="https://user-images.githubusercontent.com/68165727/183236002-c85151ba-fcb3-4fa3-8769-550e659891a2.png">
 
