@@ -1,7 +1,7 @@
 # repostchecker
-a minimal extension for Google Chrome to check whether a Reddit post is a repost with ease, uses the undocumented repostsleuth API * ** ***
+a minimal extension for Google Chrome to check whether any Reddit (image) post is a repost with ease, uses the undocumented repostsleuth API * 
 
-######  \* only works if you are a moderator of the subreddit \** not tested on mobile \*** doesn't work for a very tiny number of urls, this is a repostsleuth limitation
+###### \* doesn't work for a very tiny number of exceptional urls, this is a repostsleuth limitation
 
 <img width="419" alt="image" src="https://user-images.githubusercontent.com/68165727/145656345-70135050-1905-4d88-bf4e-b9024718e509.png">
 
@@ -18,7 +18,7 @@ by default repostchecker uses these parameters:
 these can be changed in the contentScript.js file
 
 ## installation
-* download [build_archive.zip](/build_archive) and extract the **build** folder present inside the archive
+* download [build-archive.zip](/build-archive) and extract the **build** folder present inside the archive
 
 * visit chrome://extensions/ via the addressbar
 
