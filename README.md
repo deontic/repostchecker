@@ -3,7 +3,7 @@ a minimal extension for Google Chrome to check whether any Reddit (image) post i
 
 ###### \* doesn't work for a very tiny number of exceptional urls, this is a repostsleuth limitation
 
-<img width="549" alt="image" src="https://user-images.githubusercontent.com/68165727/183236002-c85151ba-fcb3-4fa3-8769-550e659891a2.png">
+<img width="555" alt="image" src="https://user-images.githubusercontent.com/68165727/183236002-c85151ba-fcb3-4fa3-8769-550e659891a2.png">
 _^the image is outdated and it really looks way better now_
 
 #### note: 
@@ -14,7 +14,7 @@ searching for the image on Google via uploading or searching for a transcription
 
 by default repostchecker uses these parameters:
 
-<img width="330" alt="image" src="https://user-images.githubusercontent.com/68165727/145656649-d8136791-5cdc-47dc-a265-56838f296349.png">
+<img width="310" alt="image" src="https://user-images.githubusercontent.com/68165727/145656649-d8136791-5cdc-47dc-a265-56838f296349.png">
 
 these can be changed in the contentScript.js file
 
