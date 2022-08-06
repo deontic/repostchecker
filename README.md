@@ -24,7 +24,7 @@ these can be changed in the contentScript.js file
 
 * visit chrome://extensions/ via the addressbar
 
-       <img width="335" alt="image" src="https://user-images.githubusercontent.com/68165727/145637973-0709fe69-fc9e-461c-b2ec-4a008fed0596.png">
+       <img width="635" alt="image" src="https://user-images.githubusercontent.com/68165727/145637973-0709fe69-fc9e-461c-b2ec-4a008fed0596.png">
 
 * enable Developer Mode via the topbar
 
