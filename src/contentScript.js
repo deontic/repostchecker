@@ -90,10 +90,20 @@ async function main() {
         }
       }
       existsInterval = setInterval(() => {
+        console.log('searching for div');
         div =
           document.getElementById(`t3_${id}-overlay-mod-actions-menu`) ||
           document.getElementById(`t3_${id}-mod-actions-menu`) ||
-          document.querySelector('.OccjSdFd6HkHhShRg6DOl');
+          document.getElementById(`t3_${id}-overflow-menu`) ||
+          document.getElementById(`t3_${id}-overlay-overflow-menu`);
+        // worth noting there's a regular
+        // menu
+        // when you refresh the page after being on a post, and
+        // an overlay-version of an icon when
+        // you click on a post while being on
+        // another post, and see it through 'overlay' view
+
+        // || document.querySelector('.OccjSdFd6HkHhShRg6DOl');
 
         // div = document.getElementsByClassName('_3-miAEojrCvx_4FQ8x3P-s')
         // [0].childNodes[6]
@@ -143,12 +153,17 @@ async function main() {
               document.querySelector('._3m20hIKOhTTeMgPnfMbVNN').href
             )
           );
-        } else if (
-          // check if video tag exists with class media-element
-          document.querySelector('.media-element').tagName === 'VIDEO'
-        ) {
-          // videos aren't supported
-          resolve(null);
+        }
+        // check if video tag exists with class media-element
+        else {
+          try {
+            if (document.querySelector('.media-element').tagName === 'VIDEO') {
+              // videos aren't supported
+              resolve(null);
+            }
+          } catch (err) {
+            resolve(null);
+          }
         }
       }, 50);
     });
@@ -169,13 +184,43 @@ async function main() {
     button.id = 'repostchecker-button';
     button.textContent = 'RC';
     // button.classList.add('_1rNBkuuOkN2SorEXyRkYjB'); // ///
-    button.style['font-size'] = '20px';
-    button.style['white-space'] = 'nowrap';
-    button.style['padding-right'] = '4px';
+    button.classList.add('repostchecker-button');
+    // button.style['font-size'] = '20px';
+    // button.style['white-space'] = 'nowrap';
+    // button.style['padding-right'] = '4px';
+    // button.style['padding-left'] = '11px'
 
     button.addEventListener('click', detectRepost);
 
-    div.appendChild(button);
+    // /**
+    //  * @function insertAfter - utility function to insert a
+    // node after another node
+    //  * @param {DOMObject} referenceNode
+    //  * @param {DOMObject} newNode
+    //  */
+    // function insertAfter(referenceNode, newNode) {
+    //   referenceNode.parentNode.insertBefore(newNode, referenceNode.
+    // nextSibling);
+    // }
+    if (div.id.includes('overflow')) {
+      // insertAfter(button, div.parentNode.parentNode);
+      if (div.id.includes('overlay')) {
+        // for overlay, two of the same things we're looking for may
+        //  exist BEHIND one another, with one not being visible to us
+
+        const container = document.querySelectorAll('._3MmwvEEt6fv5kQPFCVJizH');
+        // get last instance of this class
+        div = container.item(container.length - 1);
+        div.parentNode.insertBefore(button, div.nextSibling);
+      } else {
+        div.parentNode.parentNode.parentNode.insertBefore(
+          button,
+          div.parentNode.parentNode.nextSibling
+        );
+      }
+    } else {
+      div.appendChild(button);
+    }
 
     console.log('successfully inserted repostchecker button');
 
@@ -371,14 +416,14 @@ async function main() {
 let url;
 window.onload = function () {
   setInterval(async () => {
-    if (
-      !url ||
-      (location.href !== url && location.href.includes('/comments'))
-    ) {
+    if (!url || location.href !== url) {
       console.log('reloading now');
 
       url = location.href;
-      await main();
+
+      if (location.href.includes('/comments')) {
+        await main();
+      }
     }
   }, 30);
   // changed from 150 -> 125

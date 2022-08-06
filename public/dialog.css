@@ -16,6 +16,7 @@
   word-break: break-all;
 }
 
+/* fix this part later */
 @query (prefers-color-scheme: dark) {
   .ui-dialog .ui-dialog-buttonpane .reposts-dialog .{
     background-color: #000000 !important;
@@ -27,7 +28,11 @@
   .repost-url-container:hover {
     color: #bdc5ff !important;
   }
-  
+}
 
-
+.repostchecker-button{
+  font-size: 20px;
+  white-space:nowrap;
+  padding-left:11px;
+  padding-right:4px
 }
