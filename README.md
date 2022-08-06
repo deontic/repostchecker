@@ -7,7 +7,7 @@ a minimal extension for Google Chrome to check whether any Reddit (image) post i
 
 
 #### note: 
-can very rarely (almost never basically) give you a net::ERR_INCOMPLETE_CHUNKED_ENCODING error but it generally works ok, 
+it _could_ show a net::ERR_INCOMPLETE_CHUNKED_ENCODING error but it is doesn't do any harm 
 additionally, remember repostsleuth can't always detect reposts  (e.g when certain changes have been made to the image) 
 
 searching for the image on Google via uploading or searching for a transcription of the image usually yields results too
