@@ -21,6 +21,10 @@ let id = null;
  * @member {object||null} button - current repost checking button
  */
 let button = null;
+/**
+ * @member {string||null} hijackedId - id for the overlay-overflow
+ */
+let hijackedId = '';
 
 /**
  * @function initializeDialog
@@ -241,11 +245,15 @@ async function main() {
         // for overlay, two of the same things we're looking for may
         //  exist BEHIND one another, with one not being visible to us
 
-        const container = document.querySelectorAll('._3MmwvEEt6fv5kQPFCVJizH');
-        // get last instance of this class
-        const div = container.item(container.length - 1);
-        console.log('div = ', div);
-        div.parentNode.insertBefore(button, div.nextSibling);
+        if (id !== hijackedId) {
+          const container = document.querySelectorAll(
+            '._3MmwvEEt6fv5kQPFCVJizH'
+          );
+          // get last instance of this class
+          const div = container.item(container.length - 1);
+          console.log('div = ', div);
+          div.parentNode.insertBefore(button, div.nextSibling);
+        }
       } else {
         div.parentNode.parentNode.parentNode.insertBefore(
           button,
@@ -448,14 +456,14 @@ async function main() {
 // within the same window
 // npm run watch before
 let url;
-let hijackedId = '';
 window.onload = function () {
   setInterval(async () => {
     if (
       hijackedId !== id &&
       button &&
       href.includes('/comments') &&
-      document.getElementById(`t3_${id}-overlay-overflow-menu`)
+      document.getElementById(`t3_${id}-overlay-overflow-menu`) &&
+      document.querySelectorAll('.repostchecker-button').length < 1
     ) {
       hijackedId = id;
       const container = document.querySelectorAll('._3MmwvEEt6fv5kQPFCVJizH');
