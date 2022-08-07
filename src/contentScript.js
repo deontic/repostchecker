@@ -215,7 +215,10 @@ async function main() {
     // div = document.getElementById(`t3_${id}-overlay-mod-actions-menu`) ||
     // document.getElementById(`t3_${id}-mod-actions-menu`);
 
+
     console.log('inserting repostchecker button');
+    
+    
     button = document.createElement('button');
 
     button.id = 'repostchecker-button';
@@ -246,6 +249,7 @@ async function main() {
         //  exist BEHIND one another, with one not being visible to us
 
         if (id !== hijackedId) {
+          hijackedId = id;
           const container = document.querySelectorAll(
             '._3MmwvEEt6fv5kQPFCVJizH'
           );
@@ -463,7 +467,7 @@ window.onload = function () {
       button &&
       href.includes('/comments') &&
       document.getElementById(`t3_${id}-overlay-overflow-menu`) &&
-      document.querySelectorAll('.repostchecker-button').length < 1
+      document.querySelectorAll('.repostchecker-button').length < 2
     ) {
       hijackedId = id;
       const container = document.querySelectorAll('._3MmwvEEt6fv5kQPFCVJizH');
