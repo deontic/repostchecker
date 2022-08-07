@@ -105,8 +105,6 @@ async function main() {
          you click on a post while being on
          another post, and see it through 'overlay' view   */
 
-        
-
         if (div) {
           resolve();
         }
@@ -168,16 +166,11 @@ async function main() {
       return;
     }
 
-<<<<<<< HEAD
     // div = document.getElementById(`t3_${id}-overlay-mod-actions-menu`) ||
     // document.getElementById(`t3_${id}-mod-actions-menu`);
 
-
-=======
->>>>>>> cf2d0e4ba65339dde19cc026f4055423ae87058e
     console.log('inserting repostchecker button');
-    
-    
+
     button = document.createElement('button');
 
     button.id = 'repostchecker-button';
@@ -252,11 +245,11 @@ async function main() {
     // the post
 
     const dialog = document.getElementById('reposts-dialog'); //
- 
+
     // clear children
     while (dialog.firstChild) {
       dialog.removeChild(dialog.firstChild);
-    } 
+    }
 
     const loading = document.createElement('div');
     loading.textContent = 'loading';
@@ -296,7 +289,6 @@ async function main() {
     const { closest_match } = json;
     let { matches } = json;
 
-     
     // closest_match should exist, and should not be present within matches
     let closestMatchUrl;
     if (closest_match) {
@@ -305,7 +297,7 @@ async function main() {
     }
 
     let repostCount = 0;
-    
+
     matches.sort((a, b) => b.match_percent - a.match_percent);
 
     const links = [];
