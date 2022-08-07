@@ -1,9 +1,6 @@
 /* eslint-disable no-undef, camelcase */
 'use strict';
 
-// const elementReady = require('./element-ready');
-// get good contrast for future theme: https://webaim.org/resources/contrastchecker/
-
 /**
  * @member {string||null} href - main post img href
  */
@@ -77,14 +74,6 @@ async function main() {
     let failed;
     let existsInterval;
 
-    // if (!location.href.includes('/comments')) {
-    //   return console.log('ERROR: page does not contain comments, cannot
-    // initialize repostchecker UI components');
-    // }
-    // console.log('runs 2')
-
-    // await elementReady('._3m20hIKOhTTeMgPnfMbVNN')
-
     await new Promise(async (resolve, reject) => {
       // the condition in the other interval can be satisfied just when the
       // user changes the page
@@ -109,45 +98,16 @@ async function main() {
           document.getElementById(`t3_${id}-mod-actions-menu`) ||
           document.getElementById(`t3_${id}-overlay-overflow-menu`) ||
           document.getElementById(`t3_${id}-overflow-menu`);
-        // worth noting there's a regular
-        // menu
-        // when you refresh the page after being on a post, and
-        // an overlay-version of an icon when
-        // you click on a post while being on
-        // another post, and see it through 'overlay' view
+        /* worth noting there's a regular
+         menu
+         when you refresh the page after being on a post, and
+         an overlay version of an icon when
+         you click on a post while being on
+         another post, and see it through 'overlay' view   */
 
-        // || document.querySelector('.OccjSdFd6HkHhShRg6DOl');
-
-        // div = document.getElementsByClassName('_3-miAEojrCvx_4FQ8x3P-s')
-        // [0].childNodes[6]
-
-        // console.log('div: ', div);
+        
 
         if (div) {
-          // if (div.id === `t3_${id}-overflow-menu`) {
-          //   // in case overflow-menu is stealing
-          //   // from overlay-overflow-menu again
-          //   setTimeout(() => {
-          //     const e = document.getElementById(
-          //       `t3_${id}-overlay-overflow-menu`
-          //     );
-          //     if (e) {
-          //       div = e;
-          //       resolve();
-          //     }
-          //     const overlayOverflowFinder = setInterval(() => {
-          //       const e = document.getElementById(
-          //         `t3_${id}-overlay-overflow-menu`
-          //       );
-          //       if (e) {
-          //         div = e;
-          //         clearInterval(overlayOverflowFinder);
-          //       }
-          //     }, 10);
-
-          //     resolve();
-          //   }, 4000);
-          // }
           resolve();
         }
       }, 30);
@@ -158,10 +118,8 @@ async function main() {
     });
 
     clearInterval(existsInterval);
-    // console.log('cleared interval');
     if (failed) {
       console.log('failed');
-      // console.log('will return now');
       return;
     }
 
@@ -170,8 +128,6 @@ async function main() {
       existsInterval = setInterval(() => {
         // if either the post viewer exists OR
         // it does exist, but is not expanded
-
-        // console.log('div: ', div);
 
         const a = document.querySelector('._3m20hIKOhTTeMgPnfMbVNN');
         const expandContainer = document.getElementsByClassName(
@@ -212,10 +168,13 @@ async function main() {
       return;
     }
 
+<<<<<<< HEAD
     // div = document.getElementById(`t3_${id}-overlay-mod-actions-menu`) ||
     // document.getElementById(`t3_${id}-mod-actions-menu`);
 
 
+=======
+>>>>>>> cf2d0e4ba65339dde19cc026f4055423ae87058e
     console.log('inserting repostchecker button');
     
     
@@ -223,30 +182,16 @@ async function main() {
 
     button.id = 'repostchecker-button';
     button.textContent = 'RC';
-    // button.classList.add('_1rNBkuuOkN2SorEXyRkYjB'); // ///
     button.classList.add('repostchecker-button');
-    // button.style['font-size'] = '20px';
-    // button.style['white-space'] = 'nowrap';
-    // button.style['padding-right'] = '4px';
-    // button.style['padding-left'] = '11px'
 
     button.addEventListener('click', detectRepost);
 
-    // /**
-    //  * @function insertAfter - utility function to insert a
-    // node after another node
-    //  * @param {DOMObject} referenceNode
-    //  * @param {DOMObject} newNode
-    //  */
-    // function insertAfter(referenceNode, newNode) {
-    //   referenceNode.parentNode.insertBefore(newNode, referenceNode.
-    // nextSibling);
-    // }
+    // function insertAfter(referenceNode, newNode) {referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);}
     if (div.id.includes('overflow')) {
       // insertAfter(button, div.parentNode.parentNode);
       if (div.id.includes('overlay')) {
         // for overlay, two of the same things we're looking for may
-        //  exist BEHIND one another, with one not being visible to us
+        // exist BEHIND one another, with one not being visible to us
 
         if (id !== hijackedId) {
           hijackedId = id;
@@ -307,11 +252,11 @@ async function main() {
     // the post
 
     const dialog = document.getElementById('reposts-dialog'); //
+ 
     // clear children
-
     while (dialog.firstChild) {
       dialog.removeChild(dialog.firstChild);
-    } //
+    } 
 
     const loading = document.createElement('div');
     loading.textContent = 'loading';
@@ -343,38 +288,16 @@ async function main() {
       $(dialog).dialog('open');
 
       return;
-      // todo use fallback karmadecay
+      // todo use karmadecay fallback
     }
 
     const json = await result.json();
-    // console.log(result);
 
     const { closest_match } = json;
     let { matches } = json;
 
-    // const dialog = document.getElementById('reposts-dialog');     //
-    // // clear children
-
-    // while (dialog.firstChild) {
-    //   dialog.removeChild(dialog.firstChild);
-    // }                                                             //
-
-    // create some text 'loading...' with
-    // animated ellipsis, append to top of dialog
-
-    // const loading = document.createElement('div');
-    // loading.textContent = 'loading...';
-    // loading.style['animation'] = 'ellipsis 1s steps(4) infinite';
-    // loading.style['font-size'] = '20px';
-    // loading.style['position'] = 'relative'
-    // loading.style['top'] = '-20px';
-
-    // dialog.appendChild(loading);
-
-    // $('#reposts-dialog').dialog('open');
-
+     
     // closest_match should exist, and should not be present within matches
-
     let closestMatchUrl;
     if (closest_match) {
       matches = [closest_match, ...matches];
@@ -382,13 +305,8 @@ async function main() {
     }
 
     let repostCount = 0;
-
-    // $('#reposts-dialog').dialog('open');
-    // console.log('matches:', matches);
-
+    
     matches.sort((a, b) => b.match_percent - a.match_percent);
-
-    // $('#reposts-dialog').dialog('open');            //
 
     const links = [];
     // regardless of the query parameter being specified in the url,
@@ -424,7 +342,7 @@ async function main() {
 
     const none = repostCount === 0;
     // prettier formats it incorrectly, someone should open a bug
-    // edit: nvm think it's fixed now
+    // edit: it's somehow fixed now
     // todo remove above comment
     // prettier-ignore
     // eslint-disable-next-line
@@ -486,5 +404,4 @@ window.onload = function () {
       }
     }
   }, 30);
-  // changed from 150 -> 125
 };

@@ -1,13 +1,13 @@
 # repostchecker
-a minimal extension for Google Chrome to check whether any Reddit (image) post can be detected as a repost with ease, uses the undocumented repostsleuth API 
+an extension for Google Chrome to check whether any Reddit (image) post can be detected as a repost with ease, uses the undocumented repostsleuth API 
 
 
 
-<img width="555" alt="image" src="https://user-images.githubusercontent.com/68165727/183236002-c85151ba-fcb3-4fa3-8769-550e659891a2.png">
+<img width="555" alt="image" src="https://user-images.githubusercontent.com/68165727/183302256-4b454920-2a14-4493-a8c2-77de2f5b68c8.png">
 
 
 #### note: 
-it _could_ show a net::ERR_INCOMPLETE_CHUNKED_ENCODING error but it's harmless 
+it _could_ (usually rarely) show a net::ERR_INCOMPLETE_CHUNKED_ENCODING error but it's harmless 
 
 additionally, remember repostsleuth can't always detect reposts  (e.g when certain changes have been made to the image) 
 
@@ -33,7 +33,7 @@ these can be changed in the contentScript.js file
 * select "Load unpacked"
 
         <img width="415" alt="image" src="https://user-images.githubusercontent.com/68165727/145638581-0c395211-feca-4c9b-8bc1-ebeef6ca29eb.png">
-* select the build folder you extracted in step 1
+* select the **build** folder you extracted in step 1
 * plugin should be installed
 
  
