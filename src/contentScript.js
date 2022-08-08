@@ -270,6 +270,7 @@ async function main() {
     let result;
     try {
       result = await fetch('https://corsproxytest123.herokuapp.com/' + url);
+      // use more reliable proxy later
     } catch (e) {
       console.warn('Error while fetching', e);
       const dialog = await initializeDialog(
