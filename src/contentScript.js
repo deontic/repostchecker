@@ -47,14 +47,15 @@ async function detectRepost() {
     dialog.removeChild(dialog.firstChild);
   }
 
-  if (document.querySelector('.media-element').tagName === 'VIDEO') {
-    const e = 'ERROR: repostsleuth does not support videos';
+  if (!href) {
+    const e = 'Error: repostsleuth only supports images';
     console.warn(e);
     const msg = document.createElement('div');
     msg.textContent = e;
     msg.style['font-size'] = '20px';
     msg.style['position'] = 'relative';
     msg.style['top'] = '5px';
+    dialog.appendChild(msg);
     $('#reposts-dialog').dialog('open');
     return;
   }
@@ -411,7 +412,8 @@ async function main() {
 // within the same window
 // npm run watch before
 let url;
-window.onload = function () {
+// pageShow could've worked better if it does what it says it does
+window.addEventListener('load', () => {
   setInterval(async () => {
     if (
       hijackedId !== id &&
@@ -445,4 +447,4 @@ window.onload = function () {
       }
     }
   }, 20);
-};
+});
