@@ -1,3 +1,6 @@
+.ui-widget-overlay{
+  z-index: -100 !important;
+}
 .repost-url-container {
   border-bottom: groove;
   line-height:20px;

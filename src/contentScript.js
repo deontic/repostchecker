@@ -24,6 +24,183 @@ let button = null;
 let hijackedId = '';
 
 /**
+ * @function detectRepost
+ * @description Detects if the post is a repost
+ * @void
+ */
+async function detectRepost() {
+  // const url = `https://api.repostsleuth.com/image?filter=true&url=${window.location.href}&same_sub=true&filter_author=true&only_older=false&include_crossposts=false&meme_filter=false&target_match_percent=${matchPercent}&filter_dead_matches=false&target_days_old=0`;
+  //
+  // const href = encodeURIComponent(
+  //   document.querySelector('._3m20hIKOhTTeMgPnfMbVNN').href
+  // );
+
+  // get json from https://www.reddit.com/{post id}/.json
+  // todo just get the image url via
+  // json ['data']['children'][0]['data']['url']
+  // no need to wait for the img div to load etc.
+  // this is a much better method^, use it
+
+  const dialog = document.getElementById('reposts-dialog'); //
+  // clear children
+  while (dialog.firstChild) {
+    dialog.removeChild(dialog.firstChild);
+  }
+
+  if (document.querySelector('.media-element').tagName === 'VIDEO') {
+    const e = 'ERROR: repostsleuth does not support videos';
+    console.warn(e);
+    const msg = document.createElement('div');
+    msg.textContent = e;
+    msg.style['font-size'] = '20px';
+    msg.style['position'] = 'relative';
+    msg.style['top'] = '5px';
+    $('#reposts-dialog').dialog('open');
+    return;
+  }
+
+  const locationHref = location.href;
+  const url = `https://api.repostsleuth.com/image?filter=true&url=${href}&same_sub=true&filter_author=true&only_older=false&include_crossposts=false&meme_filter=false&target_match_percent=${matchPercent}&filter_dead_matches=false&target_days_old=0`;
+  // works
+  // note: sometimes url does not point to a post that only contains an image,
+  // but to a post that contains a link to an image, which gets rendered as
+  // an image
+  // this edge case needs to be handled by only using the image url from
+  // the post
+
+  const loading = document.createElement('div');
+  loading.textContent = 'loading';
+  const goal = 'loading...';
+  let goalFinalIndex = 7;
+  const animationInterval = setInterval(() => {
+    goalFinalIndex = (goalFinalIndex < 10 && +goalFinalIndex + +1) || 7;
+    loading.textContent = goal.substring(0, goalFinalIndex);
+  }, 250);
+
+  loading.style['font-size'] = '20px';
+  loading.style['position'] = 'relative';
+  loading.style['top'] = '5px';
+
+  dialog.appendChild(loading);
+  $('#reposts-dialog').dialog('open');
+
+  let result;
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6200);
+    // result = await fetch('https://corsproxytest123.herokuapp.com/' + url, {
+    result = await fetch('https://api.codetabs.com/v1/proxy/?quest=' + url, {
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    // result = await fetch('https://corsproxytest123.herokuapp.com/' + url);
+    // use more reliable proxy later
+  } catch (e) {
+    console.warn('Error while fetching', e);
+    console.log('attempting retry with alternate proxy');
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      result = await fetch('https://corsproxytest123.herokuapp.com/' + url, {
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      // use more reliable proxy later
+    } catch (e) {
+      console.warn('Error while fetching', e);
+
+      const dialog = await initializeDialog(
+        'ERROR: error while fetching',
+        'err-fetch',
+        true
+      );
+      dialog.textContent = e;
+      $(dialog).dialog('open');
+
+      return;
+      // todo use karmadecay fallback
+    }
+  }
+  const json = await result.json();
+
+  const { closest_match } = json;
+  let { matches } = json;
+
+  // closest_match should exist, and should not be present within matches
+  let closestMatchUrl;
+  if (closest_match) {
+    matches = [closest_match, ...matches];
+    closestMatchUrl = `https://www.reddit.com${closest_match.post.perma_link}`;
+  }
+
+  let repostCount = 0;
+
+  matches.sort((a, b) => b.match_percent - a.match_percent);
+
+  const links = [];
+  // regardless of the query parameter being specified in the url,
+  // it can return posts from other subreddits
+  const currentSubreddit = location.href.split('/')[4];
+  for (const match of matches) {
+    if (match.post.subreddit !== currentSubreddit) {
+      continue;
+    }
+    const { hamming_match_percent } = match;
+    const link = `https://www.reddit.com${match.post.perma_link}`;
+    // console.log(
+    //   '%',
+    //   hamming_match_percent,
+    //   link,
+    //   locationHref,
+    //   closestMatchUrl,
+    //   'link!==locationHref',
+    //   link !== locationHref,
+    //   'link!==closestMatchUrl',
+    //   link !== closestMatchUrl
+    // );
+    if (
+      hamming_match_percent >= matchPercent &&
+      link !== locationHref &&
+      link !== closestMatchUrl
+    ) {
+      // add to container
+      links.push(link);
+      ++repostCount;
+    }
+  }
+
+  const none = repostCount === 0;
+  // prettier formats it incorrectly, someone should open a bug
+  // edit: it's somehow fixed now
+  // todo remove above comment
+  // prettier-ignore
+  // eslint-disable-next-line
+  const title = `${(none && 'No') || repostCount} reposts found` + (none && '' ||
+      `, > ${matchPercent}% match, sorted in descending order of similarity`);
+  dialog.textContent = title;
+
+  // separator
+  const separator = document.createElement('div');
+  separator.style.height = '15px';
+  dialog.appendChild(separator);
+
+  clearInterval(animationInterval);
+
+  // couldn't append children from within the loop,
+  // adding children separately like this works
+
+  for (const link of links) {
+    const a = document.createElement('a');
+
+    a.classList.add('repost-url-container');
+    a.target = '_blank';
+    a.textContent = link;
+    a.href = link;
+    dialog.appendChild(a);
+  }
+}
+/**
  * @function initializeDialog
  * @param {string} title - dialog title
  * @param {string} id - dialog id
@@ -50,11 +227,20 @@ async function initializeDialog(title, id, temporary) {
         localStorage.setItem('matchPercent', matchPercent);
       },
       Close: function () {
-        $(this).dialog('close');
+        // $(this).dialog('close');
+        for (const dialogElement of document.querySelectorAll(
+          '.reposts-dialog'
+        )) {
+          try {
+            $(dialogElement).dialog('close');
+          } catch (e) {
+            // don't really need to do anything here
+          }
+        }
         if (temporary) {
-          // const instance = $(this).dialog('instance');
-          const dialog = document.querySelector(`.${id}`);
+          const dialog = document.getElementById(id);
           dialog.parentNode.remove(dialog);
+          return;
         }
       },
     },
@@ -69,6 +255,14 @@ async function initializeDialog(title, id, temporary) {
 async function main() {
   {
     id = location.href.split('/')[6];
+
+    const dialog = await initializeDialog(
+      'Possible reposts',
+      'reposts-dialog',
+      false
+    );
+
+    dialog.parentNode.style['border-radius'] = '10px';
 
     let div;
     let failed;
@@ -179,7 +373,8 @@ async function main() {
 
     button.addEventListener('click', detectRepost);
 
-    // function insertAfter(referenceNode, newNode) {referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);}
+    // function insertAfter(referenceNode, newNode) {referenceNode.parentNode.
+    // insertBefore(newNode, referenceNode.nextSibling);}
     if (div.id.includes('overflow')) {
       // insertAfter(button, div.parentNode.parentNode);
       if (div.id.includes('overlay')) {
@@ -207,161 +402,6 @@ async function main() {
     }
 
     console.log('successfully inserted repostchecker button');
-
-    const dialog = await initializeDialog(
-      'Possible reposts',
-      'reposts-dialog',
-      false
-    );
-
-    dialog.parentNode.style['border-radius'] = '10px';
-  }
-
-  /**
-   * @function detectRepost
-   * @description Detects if the post is a repost
-   * @void
-   */
-  async function detectRepost() {
-    // const url = `https://api.repostsleuth.com/image?filter=true&url=${window.location.href}&same_sub=true&filter_author=true&only_older=false&include_crossposts=false&meme_filter=false&target_match_percent=${matchPercent}&filter_dead_matches=false&target_days_old=0`;
-    //
-    // const href = encodeURIComponent(
-    //   document.querySelector('._3m20hIKOhTTeMgPnfMbVNN').href
-    // );
-
-    // get json from https://www.reddit.com/{post id}/.json
-    // todo just get the image url via
-    // json ['data']['children'][0]['data']['url']
-    // no need to wait for the img div to load etc.
-    // this is a much better method^, use it
-
-    const locationHref = location.href;
-    const url = `https://api.repostsleuth.com/image?filter=true&url=${href}&same_sub=true&filter_author=true&only_older=false&include_crossposts=false&meme_filter=false&target_match_percent=${matchPercent}&filter_dead_matches=false&target_days_old=0`;
-    // works
-    // note: sometimes url does not point to a post that only contains an image,
-    // but to a post that contains a link to an image, which gets rendered as
-    // an image
-    // this edge case needs to be handled by only using the image url from
-    // the post
-
-    const dialog = document.getElementById('reposts-dialog'); //
-
-    // clear children
-    while (dialog.firstChild) {
-      dialog.removeChild(dialog.firstChild);
-    }
-
-    const loading = document.createElement('div');
-    loading.textContent = 'loading';
-    const goal = 'loading...';
-    let goalFinalIndex = 7;
-    const animationInterval = setInterval(() => {
-      goalFinalIndex = (goalFinalIndex < 10 && +goalFinalIndex + +1) || 7;
-      loading.textContent = goal.substring(0, goalFinalIndex);
-    }, 250);
-
-    loading.style['font-size'] = '20px';
-    loading.style['position'] = 'relative';
-    loading.style['top'] = '5px';
-
-    dialog.appendChild(loading);
-    $('#reposts-dialog').dialog('open');
-
-    let result;
-    try {
-      result = await fetch('https://corsproxytest123.herokuapp.com/' + url);
-      // use more reliable proxy later
-    } catch (e) {
-      console.warn('Error while fetching', e);
-      const dialog = await initializeDialog(
-        'ERROR: error while fetching',
-        'err-fetch',
-        true
-      );
-      dialog.textContent = e;
-      $(dialog).dialog('open');
-
-      return;
-      // todo use karmadecay fallback
-    }
-
-    const json = await result.json();
-
-    const { closest_match } = json;
-    let { matches } = json;
-
-    // closest_match should exist, and should not be present within matches
-    let closestMatchUrl;
-    if (closest_match) {
-      matches = [closest_match, ...matches];
-      closestMatchUrl = `https://www.reddit.com${closest_match.post.perma_link}`;
-    }
-
-    let repostCount = 0;
-
-    matches.sort((a, b) => b.match_percent - a.match_percent);
-
-    const links = [];
-    // regardless of the query parameter being specified in the url,
-    // it can return posts from other subreddits
-    const currentSubreddit = location.href.split('/')[4];
-    for (const match of matches) {
-      if (match.post.subreddit !== currentSubreddit) {
-        continue;
-      }
-      const { hamming_match_percent } = match;
-      const link = `https://www.reddit.com${match.post.perma_link}`;
-      // console.log(
-      //   '%',
-      //   hamming_match_percent,
-      //   link,
-      //   locationHref,
-      //   closestMatchUrl,
-      //   'link!==locationHref',
-      //   link !== locationHref,
-      //   'link!==closestMatchUrl',
-      //   link !== closestMatchUrl
-      // );
-      if (
-        hamming_match_percent >= matchPercent &&
-        link !== locationHref &&
-        link !== closestMatchUrl
-      ) {
-        // add to container
-        links.push(link);
-        ++repostCount;
-      }
-    }
-
-    const none = repostCount === 0;
-    // prettier formats it incorrectly, someone should open a bug
-    // edit: it's somehow fixed now
-    // todo remove above comment
-    // prettier-ignore
-    // eslint-disable-next-line
-    const title = `${(none && 'No') || repostCount} reposts found` + (none && '' ||
-      `, > ${matchPercent}% match, sorted in descending order of similarity`);
-    dialog.textContent = title;
-
-    // separator
-    const separator = document.createElement('div');
-    separator.style.height = '15px';
-    dialog.appendChild(separator);
-
-    clearInterval(animationInterval);
-
-    // couldn't append children from within the loop,
-    // adding children separately like this works
-
-    for (const link of links) {
-      const a = document.createElement('a');
-
-      a.classList.add('repost-url-container');
-      a.target = '_blank';
-      a.textContent = link;
-      a.href = link;
-      dialog.appendChild(a);
-    }
   }
 }
 
@@ -375,12 +415,20 @@ window.onload = function () {
   setInterval(async () => {
     if (
       hijackedId !== id &&
-      button &&
-      href.includes('/comments') &&
+      // button &&
+      location.href.includes('/comments') &&
       document.getElementById(`t3_${id}-overlay-overflow-menu`) &&
       document.querySelectorAll('.repostchecker-button').length < 2
     ) {
       hijackedId = id;
+      //
+      button = document.createElement('button');
+
+      button.id = 'repostchecker-button';
+      button.textContent = 'RC';
+      button.classList.add('repostchecker-button');
+      //
+      button.addEventListener('click', detectRepost);
       const container = document.querySelectorAll('._3MmwvEEt6fv5kQPFCVJizH');
       // get last instance of this class
       const div = container.item(container.length - 1);
@@ -396,5 +444,5 @@ window.onload = function () {
         await main();
       }
     }
-  }, 30);
+  }, 20);
 };
