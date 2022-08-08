@@ -20,8 +20,8 @@ by default repostchecker uses these parameters:
 these can be changed in the contentScript.js file
 
 ## installation
-* download [build-archive.zip](/build-archive) and extract the **build** folder present inside the archive
-
+* download [build-archive.zip](https://github.com/deontic/repostchecker/raw/main/build-archive/build-archive.zip) and extract the **build** folder present inside the archive (clicking this link downloads the zip file)
+ 
 * visit chrome://extensions/ via the addressbar
 
        <img width="635" alt="image" src="https://user-images.githubusercontent.com/68165727/145637973-0709fe69-fc9e-461c-b2ec-4a008fed0596.png">
