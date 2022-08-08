@@ -1,5 +1,5 @@
 .ui-widget-overlay{
-  z-index: -100 !important;
+  z-index: 0 !important;
 }
 .repost-url-container {
   border-bottom: groove;
