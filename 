@@ -1,0 +1,30 @@
+improvements
+
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Mon Aug 8 15:25:38 2022 +0300
+#
+# On branch main
+# Your branch is ahead of 'origin/main' by 2 commits.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	modified:   build-archive/build-archive.zip
+#	modified:   size-plugin.json
+#	modified:   src/contentScript.js
+#
+
+:wq!
+
+:wq!
+:
+wq!
+
+
+:wq!
+:wq!
+:help easy
+
