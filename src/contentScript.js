@@ -366,6 +366,10 @@ async function main() {
 
     console.log('inserting repostchecker button');
 
+    if (document.querySelector('.repostchecker-button')) {
+      console.warn('repostchecker button already exists; not adding');
+      return;
+    }
     button = document.createElement('button');
 
     button.id = 'repostchecker-button';
