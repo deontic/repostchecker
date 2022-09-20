@@ -32,7 +32,7 @@ these can be changed in the contentScript.js file
 
         <img width="415" alt="image" src="https://user-images.githubusercontent.com/68165727/145638581-0c395211-feca-4c9b-8bc1-ebeef6ca29eb.png">
 * select the **build** folder you extracted in step 1
-* plugin should be installed
+* plugin should be installed, refresh Chrome tabs where you need to use this
 
  
 
