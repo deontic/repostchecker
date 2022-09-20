@@ -18,7 +18,7 @@ by default repostchecker uses these parameters:
 these can be changed in the contentScript.js file
 
 ## installation
-* download [build-archive.zip](https://github.com/deontic/repostchecker/raw/main/build-archive/build-archive.zip) and extract the **build** folder present inside the archive (clicking this link downloads the zip file)
+* download [build-archive.zip](https://github.com/deontic/repostchecker/raw/main/build-archive/build-archive.zip) and **<ins>extract</ins> the build** folder present inside the archive (clicking this link downloads the zip file)
  
 * visit chrome://extensions/ via the addressbar
 
