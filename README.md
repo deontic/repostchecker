@@ -1,4 +1,4 @@
-# !! With the recent app breaking API changes Reddit has introduced, the functionality of this plugin has been restricted
+# !! With the recent major API changes Reddit has introduced, the functionality of this plugin has been restricted
 
 # repostchecker
 an extension for Google Chrome to check whether any Reddit (image) post can be detected as a repost with ease, uses the undocumented repostsleuth API 
